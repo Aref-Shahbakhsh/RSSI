@@ -1,0 +1,38 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2513
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 // === Transmitter ESP32 Code ===\
+// This ESP32 acts as a Wi-Fi Access Point and broadcasts UDP packets\
+\
+#include <WiFi.h>\
+#include <WiFiUdp.h>\
+\
+const char* ssid = "ESP32-Transmitter"; // AP SSID\
+const char* password = "12345678";      // AP password\
+WiFiUDP udp;\
+\
+void setup() \{\
+  Serial.begin(115200);\
+\
+  // Start Wi-Fi Access Point\
+  WiFi.softAP(ssid, password);\
+  IPAddress apIP = WiFi.softAPIP();\
+  Serial.print("AP IP address: ");\
+  Serial.println(apIP);\
+\
+  udp.begin(4210); // Start UDP on port 4210\
+\}\
+\
+void loop() \{\
+  udp.beginPacket("255.255.255.255", 4210); // Broadcast\
+  udp.print("Hello from transmitter!");\
+  udp.endPacket();\
+\
+  Serial.println("Packet sent!");\
+  delay(1000); // Send every 1 second\
+\}\
+}
